@@ -1,0 +1,104 @@
+multi-layer sw configuration : 
+int f0/1
+switchport trunk encapsulation do
+switchport trunk encapsulation dot1q 
+switchport mode trunk 
+interface vlan 10
+ip address 192.168.10.1 255.255.255.0
+no sh
+interface vlan 20
+ip address 192.168.20.1 255.255.255.0
+no sh
+interface vlan 30
+ip address 192.168.30.1 255.255.255.0
+no sh
+ex 
+ip routing 
+do wr 
+__________
+dhcp config : 
+ip dhcp pool net10
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1 
+ex
+ip dhcp pool net20
+network 192.168.20.0 255.255.255.0
+default-router 192.168.20.1 
+ex
+ip dhcp pool net10
+network 192.168.30.0 255.255.255.0
+default-router 192.168.30.1 
+ex
+ip dhcp excluded-address 192.168.10.1
+ip dhcp excluded-address 192.168.20.1
+ip dhcp excluded-address 192.168.30.1
+do wr 
+int f0/2
+no switchport
+ip address 10.10.10.1 255.255.255.0
+no sh	
+do wr 
+ex
+
+
+
+___________________________________
+router configuration : 
+int f0/0
+no sh
+ex 
+int f0/0.40
+encapsulation dot1Q 40
+ip address 192.168.40.1 255.255.255.0
+no sh
+ex 
+int f0/0.50
+encapsulation dot1Q 50
+ip address 192.168.50.1 255.255.255.0
+no sh
+ex 
+int f0/0.60
+encapsulation dot1Q 60
+ip address 192.168.60.1 255.255.255.0
+no sh
+ex 
+ip dhcp pool net40
+network 192.168.40.0 255.255.255.0
+default-router 192.168.40.1 
+ex
+ip dhcp pool net50
+network 192.168.50.0 255.255.255.0
+default-router 192.168.50.1 
+ex
+ip dhcp pool net60
+network 192.168.60.0 255.255.255.0
+default-router 192.168.60.1 
+ex
+ip dhcp excluded-address 192.168.40.1
+ip dhcp excluded-address 192.168.50.1
+ip dhcp excluded-address 192.168.60.1
+do wr 
+int f0/1
+ip address 10.10.10.2 255.255.255.252
+no sh	
+do wr 
+________________________________
+add point in project i need to ping from vlan 10,20,30 to vlan 40,50,60 what i do ? 
+i need routing (static , rip , ospf , eigrp )
+apply this : 
+default static route 
+
+MLS: 
+ip route 0.0.0.0 0.0.0.0 10.10.10.2 
+
+router : 
+ip route 0.0.0.0 0.0.0.0 10.10.10.21
+_________________________________
+define in sw 0 in svi 
+vlans 40,50,60
+
+and in sw1 in roas 
+vlan 10,20,30
+
+
+
